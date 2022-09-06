@@ -5,42 +5,39 @@ import time
 
 GRID_SIZE = 9
 
+
 def simpleSolver(puzzle):
     arr = puzzle
 
-    #until a correct solution has been found
+    # until a correct solution has been found
     for i in range(GRID_SIZE):
         for j in range(GRID_SIZE):
-            if (arr[i,j] == 0):
+            if (arr[i, j] == 0):
 
-                #randomly generating a number, 3 times
+                # randomly generating a number, 3 times
                 for _ in range(3):
                     rnd = random.randint(1, 9)
 
                     if (checkIfAvaliable(rnd, [i, j], arr)):
                         arr[i, j] = rnd
-                    
-                    #if no numbers were found, restart the function
+
+                    # if no numbers were found, restart the function
 
                 return False
 
     return arr
-
-        
-
-        
 
 
 def checkIfAvaliable(num, index, arr):
 
     row, column = index
 
-    #checking the row and column
+    # checking the row and column
     for i in range(GRID_SIZE):
         if (arr[row, i] == num or arr[i, column] == num):
             return False
 
-    #checking the square
+    # checking the square
     if (row <= 2):
         if (column <= 2):
             for i in range(0, 3):
@@ -116,6 +113,7 @@ globalPuzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
 
 globalCounter = 0
 
+
 def threadSolving():
     global globalResult, globalPuzzle, globalCounter, foundSolution
 
@@ -123,7 +121,7 @@ def threadSolving():
 
     counter = 0
 
-    while(1):
+    while (1):
         result = simpleSolver(puzzle)
 
         if (foundSolution):
@@ -139,10 +137,6 @@ def threadSolving():
                 globalCounter += counter
                 print(f"failed {globalCounter}")
                 counter = 0
-
-
-
-
 
 
 def main():
@@ -166,7 +160,6 @@ def main():
                 [9, 6, 1, 5, 3, 7, 2, 8, 4],
                 [2, 8, 7, 4, 1, 9, 6, 3, 5],
                 [3, 4, 5, 2, 8, 6, 1, 7, 0]]
-
 
     puzzle = np.array(puzzle)
     solution = np.array(solution)

@@ -4,17 +4,17 @@ import time
 
 GRID_SIZE = 9
 
+
 def checkIfAvaliable(num, index, arr):
 
     row, column = index
 
-    #checking the row and column
+    # checking the row and column
     for i in range(GRID_SIZE):
         if (arr[row, i] == num or arr[i, column] == num):
             return False
 
-
-    #checking the 3x3 square
+    # checking the 3x3 square
     sqRow = math.floor(row / 3)
     sqClmn = math.floor(column / 3)
 
@@ -24,6 +24,7 @@ def checkIfAvaliable(num, index, arr):
                 return False
     return True
 
+
 def solver(puzzle):
 
     modifiedCoords = []
@@ -31,24 +32,24 @@ def solver(puzzle):
     arr = puzzle
     kStartValue = 1
 
-    #until a correct solution has been found
+    # until a correct solution has been found
     i, j = 0, 0
-    while(i < GRID_SIZE):
-        while(j < GRID_SIZE):
+    while (i < GRID_SIZE):
+        while (j < GRID_SIZE):
             found = False
-            if (arr[i,j] == 0):
+            if (arr[i, j] == 0):
                 for k in range(kStartValue, 10):
-                    if (checkIfAvaliable(k, [i,j], arr)):
+                    if (checkIfAvaliable(k, [i, j], arr)):
                         arr[i, j] = k
                         modifiedCoords.append([i, j])
                         found = True
                         break
 
-                #no appropriate numbers found
+                # no appropriate numbers found
                 kStartValue = 1
                 if (not found):
                     i, j = modifiedCoords[-1]
-                    kStartValue = arr[i,j] + 1
+                    kStartValue = arr[i, j] + 1
                     arr[i, j] = 0
                     j -= 1
                     modifiedCoords.pop()
@@ -57,8 +58,7 @@ def solver(puzzle):
 
         i += 1
         j = 0
-                    
-                
+
     return arr
 
 
@@ -66,24 +66,24 @@ def main():
 
     time1 = time.monotonic()
     puzzle1 = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
-              [6, 0, 0, 1, 9, 5, 0, 0, 0],
-              [0, 9, 8, 0, 0, 0, 0, 6, 0],
-              [8, 0, 0, 0, 6, 0, 0, 0, 3],
-              [4, 0, 0, 8, 0, 3, 0, 0, 1],
-              [7, 0, 0, 0, 2, 0, 0, 0, 6],
-              [0, 6, 0, 0, 0, 0, 2, 8, 0],
-              [0, 0, 0, 4, 1, 9, 0, 0, 5],
-              [0, 0, 0, 0, 8, 0, 0, 7, 9]]
+               [6, 0, 0, 1, 9, 5, 0, 0, 0],
+               [0, 9, 8, 0, 0, 0, 0, 6, 0],
+               [8, 0, 0, 0, 6, 0, 0, 0, 3],
+               [4, 0, 0, 8, 0, 3, 0, 0, 1],
+               [7, 0, 0, 0, 2, 0, 0, 0, 6],
+               [0, 6, 0, 0, 0, 0, 2, 8, 0],
+               [0, 0, 0, 4, 1, 9, 0, 0, 5],
+               [0, 0, 0, 0, 8, 0, 0, 7, 9]]
 
-    puzzle2 =  [[0,0,0,7,1,0,5,0,0],
-                [7,0,2,0,0,0,0,0,0],
-                [0,0,0,0,9,0,1,8,0],
-                [0,4,0,0,0,6,0,9,0],
-                [9,0,0,0,0,0,0,5,0],
-                [3,0,7,0,0,4,0,0,0],
-                [0,6,0,0,0,0,0,0,2],
-                [0,0,0,8,7,0,0,0,0],
-                [5,0,8,0,0,0,0,0,3]]
+    puzzle2 = [[0, 0, 0, 7, 1, 0, 5, 0, 0],
+               [7, 0, 2, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 9, 0, 1, 8, 0],
+               [0, 4, 0, 0, 0, 6, 0, 9, 0],
+               [9, 0, 0, 0, 0, 0, 0, 5, 0],
+               [3, 0, 7, 0, 0, 4, 0, 0, 0],
+               [0, 6, 0, 0, 0, 0, 0, 0, 2],
+               [0, 0, 0, 8, 7, 0, 0, 0, 0],
+               [5, 0, 8, 0, 0, 0, 0, 0, 3]]
 
     solution = [[5, 3, 4, 6, 7, 8, 9, 1, 2],
                 [6, 7, 2, 1, 9, 5, 3, 4, 8],
@@ -95,12 +95,12 @@ def main():
                 [2, 8, 7, 4, 1, 9, 6, 3, 5],
                 [3, 4, 5, 2, 8, 6, 1, 7, 9]]
 
-
     puzzle = np.array(puzzle2)
     print(solver(puzzle))
     time2 = time.monotonic()
 
     print(time2 - time1)
-    
+
+
 if (__name__ == '__main__'):
     main()

@@ -1,7 +1,7 @@
 from tkinter import *
 import tkinter.font as font
 import numpy as np
-import random
+import sudoku_solver_backtracking as solver
 
 GRID_WIDTH = 540
 GRID_HEIGHT = 540
@@ -9,17 +9,23 @@ GRID_SIZE = 9
 
 
 canvasNumbers = []
+randomizeCounter = 0
 
 
-def randomizeGrid(c, puzzles, cFont):
-    global canvasNumbers
+def newPuzzle(c, puzzles, cFont):
+    global canvasNumbers, randomizeCounter
+
+    randomizeCounter += 1
 
     for n in canvasNumbers:
         c.delete(n)
 
-    rnd = random.randint(0, len(puzzles) - 1)
-    print(f"RND: {rnd}")
-    grid = puzzles[rnd]
+    if (randomizeCounter % len(puzzles) == 0):
+        randomizeCounter = 0
+        grid = puzzles[randomizeCounter]
+    else:
+        grid = puzzles[randomizeCounter]
+
     canvasNumbers = []
     for i in range(GRID_SIZE):
         for j in range(GRID_SIZE):
@@ -29,16 +35,30 @@ def randomizeGrid(c, puzzles, cFont):
                 canvasNumbers.append(num)
 
 
-def startSolving():
-    print("SOLVING")
+def startSolving(c, grid, cFont):
+    global canvasNumbers
+    print(canvasNumbers)
+
+    solvedGrid = np.copy(grid)
+
+    solvedGrid = solver.solver(solvedGrid)
+
+    for n in canvasNumbers:
+        c.delete(n)
+
+    canvasNumbers = []
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE):
+            if (solvedGrid[i, j] != 0):
+                num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
+                                    text=solvedGrid[i, j], fill="black", font=cFont)
+                canvasNumbers.append(num)
 
 
 def createWindow(puzzles):
     global canvasNumbers
 
-    rnd = random.randint(0, len(puzzles) - 1)
-    print(f"RND: {rnd}")
-    grid = puzzles[rnd]
+    grid = puzzles[0]
 
     window = Tk()
     window.title("Sudoku Solving Visualiser")
@@ -98,8 +118,8 @@ def createWindow(puzzles):
                     image=pixelVirtual, compound="c", command=lambda: startSolving(c, grid, cFont))
     startB.place(x=80, y=40)
 
-    randomizeB = Button(bFrame, text="Randomize", width=120, height=50,
-                        image=pixelVirtual, compound="c", command=lambda: randomizeGrid(c, puzzles, cFont))
+    randomizeB = Button(bFrame, text="New Puzzle", width=120, height=50,
+                        image=pixelVirtual, compound="c", command=lambda: newPuzzle(c, puzzles, cFont))
     randomizeB.place(x=320, y=40)
 
     startB["font"] = bFont

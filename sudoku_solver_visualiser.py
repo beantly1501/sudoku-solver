@@ -9,22 +9,23 @@ GRID_SIZE = 9
 
 
 canvasNumbers = []
-randomizeCounter = 0
+currentPuzzle = 0
+puzzles = []
 
 
 def newPuzzle(c, puzzles, cFont):
-    global canvasNumbers, randomizeCounter
+    global canvasNumbers, currentPuzzle
 
-    randomizeCounter += 1
+    currentPuzzle += 1
 
     for n in canvasNumbers:
         c.delete(n)
 
-    if (randomizeCounter % len(puzzles) == 0):
-        randomizeCounter = 0
-        grid = puzzles[randomizeCounter]
+    if (currentPuzzle % len(puzzles) == 0):
+        currentPuzzle = 0
+        grid = puzzles[currentPuzzle]
     else:
-        grid = puzzles[randomizeCounter]
+        grid = puzzles[currentPuzzle]
 
     canvasNumbers = []
     for i in range(GRID_SIZE):
@@ -36,8 +37,7 @@ def newPuzzle(c, puzzles, cFont):
 
 
 def startSolving(c, grid, cFont):
-    global canvasNumbers
-    print(canvasNumbers)
+    global canvasNumbers, currentPuzzle
 
     solvedGrid = np.copy(grid)
 
@@ -55,8 +55,8 @@ def startSolving(c, grid, cFont):
                 canvasNumbers.append(num)
 
 
-def createWindow(puzzles):
-    global canvasNumbers
+def createWindow():
+    global canvasNumbers, puzzles, currentPuzzle
 
     grid = puzzles[0]
 
@@ -115,7 +115,7 @@ def createWindow(puzzles):
     bFont = font.Font(size=15)
 
     startB = Button(bFrame, text="Start Solving", width=120, height=50,
-                    image=pixelVirtual, compound="c", command=lambda: startSolving(c, grid, cFont))
+                    image=pixelVirtual, compound="c", command=lambda: startSolving(c, puzzles[currentPuzzle], cFont))
     startB.place(x=80, y=40)
 
     randomizeB = Button(bFrame, text="New Puzzle", width=120, height=50,
@@ -136,6 +136,7 @@ def createWindow(puzzles):
 
 
 def main():
+    global puzzles
 
     puzzle1 = np.array([[5, 3, 0, 0, 7, 0, 0, 0, 0],
                         [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -167,23 +168,33 @@ def main():
                         [0, 7, 0, 0, 0, 0, 0, 0, 3],
                         [9, 0, 3, 0, 0, 0, 6, 0, 4]])
 
-    puzzle4 = np.array([[0, 0, 4, 0, 6, 0, 0, 0, 5],
-                        [7, 8, 0, 4, 0, 0, 0, 2, 0],
-                        [0, 0, 2, 6, 0, 1, 0, 7, 8],
-                        [6, 1, 0, 0, 7, 5, 0, 0, 9],
-                        [0, 0, 7, 5, 4, 0, 0, 6, 1],
-                        [0, 0, 1, 7, 5, 0, 9, 3, 0],
-                        [0, 7, 0, 3, 0, 0, 0, 1, 0],
-                        [0, 4, 0, 2, 0, 6, 0, 0, 7],
-                        [0, 2, 0, 0, 0, 7, 4, 0, 0]])
+    puzzle4 = np.array([[7, 8, 0, 4, 0, 0, 1, 2, 0],
+                        [6, 0, 0, 0, 7, 5, 0, 0, 9],
+                        [0, 0, 0, 6, 0, 1, 0, 7, 8],
+                        [0, 0, 7, 0, 4, 0, 2, 6, 0],
+                        [0, 0, 1, 0, 5, 0, 9, 3, 0],
+                        [9, 0, 4, 0, 6, 0, 0, 0, 5],
+                        [0, 7, 0, 3, 0, 0, 0, 1, 2],
+                        [1, 2, 0, 0, 0, 7, 4, 0, 0],
+                        [0, 4, 9, 2, 0, 6, 0, 0, 7]])
 
-    puzzles = list()
+    puzzle5 = np.array([[3, 0, 0, 8, 0, 0, 0, 0, 1],
+                        [0, 0, 0, 0, 0, 2, 0, 0, 0],
+                        [0, 4, 1, 5, 0, 0, 8, 3, 0],
+                        [0, 2, 0, 0, 0, 1, 0, 0, 0],
+                        [8, 5, 0, 4, 0, 3, 0, 1, 7],
+                        [0, 0, 0, 7, 0, 0, 0, 2, 0],
+                        [0, 8, 5, 0, 0, 9, 7, 4, 0],
+                        [0, 0, 0, 1, 0, 0, 0, 0, 0],
+                        [9, 0, 0, 0, 0, 7, 0, 0, 6]])
+
     puzzles.append(puzzle1)
     puzzles.append(puzzle2)
     puzzles.append(puzzle3)
     puzzles.append(puzzle4)
+    puzzles.append(puzzle5)
 
-    createWindow(puzzles)
+    createWindow()
 
 
 if (__name__ == '__main__'):

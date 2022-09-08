@@ -13,7 +13,7 @@ currentPuzzle = 0
 puzzles = []
 
 
-def newPuzzle(c, puzzles, cFont):
+def newPuzzle(c, puzzles, cFont, window):
     global canvasNumbers, currentPuzzle
 
     currentPuzzle += 1
@@ -36,7 +36,7 @@ def newPuzzle(c, puzzles, cFont):
                 canvasNumbers.append(num)
 
 
-def startSolving(c, grid, cFont):
+def instantSolve(c, grid, cFont, window):
     global canvasNumbers, currentPuzzle
 
     solvedGrid = np.copy(grid)
@@ -53,6 +53,57 @@ def startSolving(c, grid, cFont):
                 num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
                                     text=solvedGrid[i, j], fill="black", font=cFont)
                 canvasNumbers.append(num)
+
+
+def visualSolve(c, grid, cFont, window, buttons):
+    global canvasNumbers, currentPuzzle
+
+    buttons[0].configure(state=DISABLED)
+    buttons[2].configure(state=DISABLED)
+
+    unsolvedGrid = np.copy(grid)
+
+    solvedGrid = solver.solver(np.copy(unsolvedGrid))
+
+    for n in canvasNumbers:
+        c.delete(n)
+
+    canvasNumbers = []
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE):
+            if (unsolvedGrid[i, j] != 0):
+                num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
+                                    text=unsolvedGrid[i, j], fill="black", font=cFont)
+                canvasNumbers.append(num)
+
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE):
+            if (unsolvedGrid[i, j] != solvedGrid[i, j]):
+                num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
+                                    text="1", fill="black", font=cFont)
+                canvasNumbers.append(num)
+                k = 0
+                while (k < ((9*2) + 1)):
+                    c.delete(num)
+                    canvasNumbers.pop()
+
+                    num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
+                                        text=(k % 10), fill="black", font=cFont)
+                    canvasNumbers.append(num)
+
+                    window.after(10)
+                    window.update()
+
+                    k += 1
+
+                c.delete(num)
+                canvasNumbers.pop()
+                num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
+                                    text=solvedGrid[i, j], fill="black", font=cFont)
+                canvasNumbers.append(num)
+
+    buttons[0].configure(state=NORMAL)
+    buttons[2].configure(state=NORMAL)
 
 
 def createWindow():
@@ -114,15 +165,22 @@ def createWindow():
 
     bFont = font.Font(size=15)
 
-    startB = Button(bFrame, text="Start Solving", width=120, height=50,
-                    image=pixelVirtual, compound="c", command=lambda: startSolving(c, puzzles[currentPuzzle], cFont))
-    startB.place(x=80, y=40)
+    startB = Button(bFrame, text="Instant Solve", width=120, height=50,
+                    image=pixelVirtual, compound="c", command=lambda: instantSolve(c, puzzles[currentPuzzle], cFont, window))
+    startB.place(x=30, y=40)
+
+    visualB = Button(bFrame, text="Visual Solving", width=120, height=50,
+                     image=pixelVirtual, compound="c", command=lambda: visualSolve(c, puzzles[currentPuzzle], cFont, window, buttons))
+    visualB.place(x=210, y=40)
 
     randomizeB = Button(bFrame, text="New Puzzle", width=120, height=50,
-                        image=pixelVirtual, compound="c", command=lambda: newPuzzle(c, puzzles, cFont))
-    randomizeB.place(x=320, y=40)
+                        image=pixelVirtual, compound="c", command=lambda: newPuzzle(c, puzzles, cFont, window))
+    randomizeB.place(x=540 - 30 - 120, y=40)
+
+    buttons = [startB, visualB, randomizeB]
 
     startB["font"] = bFont
+    visualB["font"] = bFont
     randomizeB["font"] = bFont
 
     ##### FOR PRINTING MOUSE POS, FOR DEBUG ONLY ##########################

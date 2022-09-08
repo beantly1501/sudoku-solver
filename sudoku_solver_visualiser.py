@@ -13,10 +13,12 @@ currentPuzzle = 0
 puzzles = []
 
 
-def newPuzzle(c, puzzles, cFont, window):
+def newPuzzle(c, puzzles, cFont, buttons):
     global canvasNumbers, currentPuzzle
 
     currentPuzzle += 1
+    for b in buttons:
+        b.configure(state=NORMAL)
 
     for n in canvasNumbers:
         c.delete(n)
@@ -36,8 +38,11 @@ def newPuzzle(c, puzzles, cFont, window):
                 canvasNumbers.append(num)
 
 
-def instantSolve(c, grid, cFont, window):
+def instantSolve(c, grid, cFont, buttons):
     global canvasNumbers, currentPuzzle
+
+    buttons[0].configure(state=DISABLED)
+    buttons[1].configure(state=DISABLED)
 
     solvedGrid = np.copy(grid)
 
@@ -59,6 +64,7 @@ def visualSolve(c, grid, cFont, window, buttons):
     global canvasNumbers, currentPuzzle
 
     buttons[0].configure(state=DISABLED)
+    buttons[1].configure(state=DISABLED)
     buttons[2].configure(state=DISABLED)
 
     unsolvedGrid = np.copy(grid)
@@ -102,7 +108,6 @@ def visualSolve(c, grid, cFont, window, buttons):
                                     text=solvedGrid[i, j], fill="black", font=cFont)
                 canvasNumbers.append(num)
 
-    buttons[0].configure(state=NORMAL)
     buttons[2].configure(state=NORMAL)
 
 
@@ -166,7 +171,7 @@ def createWindow():
     bFont = font.Font(size=15)
 
     startB = Button(bFrame, text="Instant Solve", width=120, height=50,
-                    image=pixelVirtual, compound="c", command=lambda: instantSolve(c, puzzles[currentPuzzle], cFont, window))
+                    image=pixelVirtual, compound="c", command=lambda: instantSolve(c, puzzles[currentPuzzle], cFont, buttons))
     startB.place(x=30, y=40)
 
     visualB = Button(bFrame, text="Visual Solving", width=120, height=50,
@@ -174,7 +179,7 @@ def createWindow():
     visualB.place(x=210, y=40)
 
     randomizeB = Button(bFrame, text="New Puzzle", width=120, height=50,
-                        image=pixelVirtual, compound="c", command=lambda: newPuzzle(c, puzzles, cFont, window))
+                        image=pixelVirtual, compound="c", command=lambda: newPuzzle(c, puzzles, cFont, buttons))
     randomizeB.place(x=540 - 30 - 120, y=40)
 
     buttons = [startB, visualB, randomizeB]

@@ -251,11 +251,22 @@ def main():
                         [0, 0, 0, 1, 0, 0, 0, 0, 0],
                         [9, 0, 0, 0, 0, 7, 0, 0, 6]])
 
+    puzzle6 = np.array([[0, 0, 0, 4, 0, 0, 0, 7, 5],
+                        [0, 4, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 6, 8, 1, 0, 0, 0, 3],
+                        [4, 0, 1, 7, 0, 0, 0, 6, 2],
+                        [0, 0, 0, 6, 0, 4, 0, 0, 0],
+                        [6, 2, 0, 0, 0, 1, 9, 0, 8],
+                        [3, 0, 0, 0, 8, 7, 1, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 3, 0],
+                        [5, 1, 0, 0, 0, 2, 0, 0, 0]])
+
     puzzles.append(puzzle1)
     puzzles.append(puzzle2)
     puzzles.append(puzzle3)
     puzzles.append(puzzle4)
     puzzles.append(puzzle5)
+    puzzles.append(puzzle6)
 
     createWindow()
 

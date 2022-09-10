@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import time
+import sudoku_puzzle_generator as puzzle_generator
 
 GRID_SIZE = 9
 

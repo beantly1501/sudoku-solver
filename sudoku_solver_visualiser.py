@@ -2,6 +2,8 @@ from tkinter import *
 import tkinter.font as font
 import numpy as np
 import sudoku_solver_backtracking as solver
+import sudoku_puzzle_generator as puzzle_generator
+import random
 
 GRID_WIDTH = 540
 GRID_HEIGHT = 540
@@ -28,6 +30,26 @@ def newPuzzle(c, puzzles, cFont, buttons):
         grid = puzzles[currentPuzzle]
     else:
         grid = puzzles[currentPuzzle]
+
+    canvasNumbers = []
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE):
+            if (grid[i, j] != 0):
+                num = c.create_text((30 * (j + 1)) + (30 * j), (30 * (i + 1)) + (30 * i),
+                                    text=grid[i, j], fill="black", font=cFont)
+                canvasNumbers.append(num)
+
+
+def newPuzzleGenerator(c, puzzles, cFont, buttons):
+    global canvasNumbers, currentPuzzle
+
+    for b in buttons:
+        b.configure(state=NORMAL)
+
+    for n in canvasNumbers:
+        c.delete(n)
+
+    grid = puzzle_generator.randomizeGrid()
 
     canvasNumbers = []
     for i in range(GRID_SIZE):
@@ -179,7 +201,7 @@ def createWindow():
     visualB.place(x=210, y=40)
 
     randomizeB = Button(bFrame, text="New Puzzle", width=120, height=50,
-                        image=pixelVirtual, compound="c", command=lambda: newPuzzle(c, puzzles, cFont, buttons))
+                        image=pixelVirtual, compound="c", command=lambda: newPuzzleGenerator(c, puzzles, cFont, buttons))
     randomizeB.place(x=540 - 30 - 120, y=40)
 
     buttons = [startB, visualB, randomizeB]
